@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactPlayer from "react-player";
-import preview from "./preview"
+import Preview from "./preview";
 class home extends Component {
     constructor(props) {
         super(props);
@@ -23,33 +23,36 @@ class home extends Component {
     }
 
     onClick = (evt) => {
+        debugger;
         this.setState({
-            showVideos: true,
+
             selVideo: evt.currentTarget.id
         })
-        console.log(this.state)
     };
-    shouldComponentUpdate(nextProps, nextState) {
+    
+    componentDidUpdate() {
         debugger;
-        return true;
+        if (this.state.selVideo !== "" && !this.state.showVideos)
+            this.setState({
+                showVideos: true
+            })
+        // this.props.history.push("/preview")
     }
     render() {
         return (
             <div>
                 {(this.state.jsonData.length >= 1) ?
                     this.state.jsonData.map((data, index) => (
-                        <div key={data.vId} id={data.vId} className="items" onClick={this.onClick}>
-                            {(!this.state.jsonData.showVideos) ?
+                        <div key={data.vId} id={data.vId} className="items" onClick={this.onClick} >
+                            {(!this.state.showVideos) ?
                                 <div>
                                     <ReactPlayer light={true} url={data.link} controls={true} playing={false} />
                                     <p>{data.description}</p>
                                 </div>
                                 :
-                                <preview></preview>
+                                <Preview data={this.state} currentObj={data}></Preview>
                             }
-
                         </div>
-
                     ))
                     : <h1>No Data</h1>
                 }
